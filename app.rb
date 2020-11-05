@@ -16,16 +16,21 @@ class Blog_App < Sinatra::Base
       session[:username] = params[:username]
       redirect '/message_board'
     else
-      flash[:notice] = 'Incorrect password!'
+      flash[:notice] = 'Incorrect username or password!'
       redirect '/'
     end
   end
 
   # Post for creating new account
   post '/messages/new_user' do
-    User.create_user(username: params[:username], password: params[:password])
-    session[:username] = params[:username]
-    redirect '/message_board'
+    if User.create_user(username: params[:username], password: params[:password])
+      session[:username] = params[:username]
+      redirect '/message_board'
+    else
+      flash[:notice] = 'Username taken!'
+      redirect '/'
+    end
+
   end
 
   
